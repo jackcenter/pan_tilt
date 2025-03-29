@@ -40,13 +40,13 @@ ConfigurationSpace::ConfigurationSpace(const ConfigurationSpaceOptions &options)
   }
 
   // Calculate the coordinate grid size
-  pan_configuration_count_ = static_cast<size_t>(
-      1 + (options.pan_range.second - options.pan_range.first) /
-              options.pan_resolution);
+  pan_configuration_count_ =
+      static_cast<size_t>((options.pan_range.second - options.pan_range.first) /
+                          options.pan_resolution);
 
   tilt_configuration_count_ = static_cast<size_t>(
-      1 + (options.tilt_range.second - options.tilt_range.first) /
-              options.tilt_resolution);
+      (options.tilt_range.second - options.tilt_range.first) /
+      options.tilt_resolution);
 
   // Reserve space for the coordinate grid
   coordinate_grid_.reserve(pan_configuration_count_);
@@ -59,19 +59,25 @@ ConfigurationSpace::ConfigurationSpace(const ConfigurationSpaceOptions &options)
        ++pan_config_idx) {
     for (size_t tilt_config_idx = 0;
          tilt_config_idx < tilt_configuration_count_; ++tilt_config_idx) {
-      const double pan_config =
-          options.pan_range.first + options.pan_resolution * pan_config_idx;
-      const double tilt_config =
-          options.tilt_range.first + options.tilt_resolution * tilt_config_idx;
+      const Coordinate minumum{
+          options.pan_range.first + options.pan_resolution * pan_config_idx,
+          options.tilt_range.first + options.tilt_resolution * tilt_config_idx};
+
+      const Coordinate maximum{
+          options.pan_range.first +
+              options.pan_resolution * (pan_config_idx + 1),
+          options.tilt_range.first +
+              options.tilt_resolution * (tilt_config_idx + 1)};
+
       coordinate_grid_[pan_config_idx][tilt_config_idx] =
-          Coordinate{pan_config, tilt_config};
+          CoordinateRange{minumum, maximum};
     }
   }
 }
 
-Coordinate
-ConfigurationSpace::getCoordinateByIndex(const size_t pan_config,
-                                         const size_t tilt_config) const {
+CoordinateRange
+ConfigurationSpace::getCoordinateRangeByIndex(const size_t pan_config,
+                                              const size_t tilt_config) const {
   if (pan_config >= pan_configuration_count_) {
     throw std::invalid_argument(
         "`pan_config` exceeds `pan_configuration_count_`");

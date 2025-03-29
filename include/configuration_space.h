@@ -7,6 +7,7 @@
 
 using Coordinate = std::pair<double, double>;
 using Range = std::pair<double, double>;
+using CoordinateRange = std::pair<Coordinate, Coordinate>;
 
 struct ConfigurationSpaceOptions {
   Range pan_range;
@@ -24,17 +25,20 @@ class ConfigurationSpace {
 public:
   ConfigurationSpace(const ConfigurationSpaceOptions &options);
 
-  Coordinate getCoordinateByIndex(const size_t pan_config,
-                                  const size_t tilt_config) const;
+  CoordinateRange getCoordinateRangeByIndex(const size_t pan_config,
+                                            const size_t tilt_config) const;
+
   ConfigurationSpaceOptions getOptions(void) const;
+
   size_t getPanConfigurationCount(void) const;
+
   size_t getTiltConfigurationCount(void) const;
 
 private:
   ConfigurationSpaceOptions options_;
   size_t pan_configuration_count_;
   size_t tilt_configuration_count_;
-  std::vector<std::vector<Coordinate>> coordinate_grid_;
+  std::vector<std::vector<CoordinateRange>> coordinate_grid_;
 };
 
 #endif // CONFIGURATION_SPACE_H

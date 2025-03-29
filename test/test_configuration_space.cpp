@@ -19,7 +19,7 @@ static int test_construction(void) {
     did_a_test_fail = true;
   }
 
-  const size_t expected_pan_configuration_count = 7;
+  const size_t expected_pan_configuration_count = 6;
   const size_t pan_configuration_count =
       configuration_space.getPanConfigurationCount();
   if (expected_pan_configuration_count !=
@@ -30,7 +30,7 @@ static int test_construction(void) {
     did_a_test_fail = true;
   }
 
-  const size_t expected_tilt_configuration_count = 3;
+  const size_t expected_tilt_configuration_count = 2;
   const size_t tilt_configuration_count =
       configuration_space.getTiltConfigurationCount();
   if (expected_tilt_configuration_count != tilt_configuration_count) {
@@ -40,8 +40,9 @@ static int test_construction(void) {
     did_a_test_fail = true;
   }
 
-  const Coordinate expected_coordinate{-3, -2};
-  if (expected_coordinate != configuration_space.getCoordinateByIndex(0, 0)) {
+  const CoordinateRange expected_coordinate_range{{-3, -2}, {-2, -1}};
+  if (expected_coordinate_range !=
+      configuration_space.getCoordinateRangeByIndex(0, 0)) {
     std::cout << "\tExpected coordinate does not match returned coordinate\n";
     did_a_test_fail = true;
   }
