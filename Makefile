@@ -5,7 +5,8 @@ TGT_DIR := ./
 SRC_DIR := ./src
 INC_DIR := ./include
 
-TEST_TGT_DIR := $(BUILD_DIR)/test/tests
+TEST_BUILD_DIR := $(BUILD_DIR)/test
+TEST_TGT_DIR := $(TEST_BUILD_DIR)/tests
 TEST_DIR := ./test
 
 SRCS := $(filter-out $(SRC_DIR)/main.cpp, $(wildcard $(SRC_DIR)/*.cpp))	# Find all cpp files
@@ -16,15 +17,19 @@ LDFLAGS ?=
 CXXFLAGS ?= -g -Wall -Werror -O0 -I$(INC_DIR)
 
 define build_test
-$(eval target := $1)
+$(eval test_name := $1)
 $(eval source := $2)
 
-$(target): $(OBJS) $(target).o
-	$(CXX) $(target).o $(OBJS) $(LDFLAGS) -o $(target)
+$(eval target := $(TEST_TGT_DIR)/$(test_name))
+$(eval object := $(TEST_BUILD_DIR)/$(test_name).o)
 
-$(target).o: $(source)
+$(target): $(OBJS) $(object)
 	mkdir -p $(dir $(target))
-	$(CXX) $(CXXFLAGS) -c $(source) -o $(target).o
+	$(CXX) $(object) $(OBJS) $(LDFLAGS) -o $(target)
+
+$(object): $(source)
+	mkdir -p $(dir $(object))
+	$(CXX) $(CXXFLAGS) -c $(source) -o $(object)
 endef
 
 all: $(TGT_DIR)/$(TARGET)
@@ -48,8 +53,8 @@ test: \
 	$(TEST_TGT_DIR)/test_utilities
 
 # Build tests here
-$(eval $(call build_test, $(TEST_TGT_DIR)/test_configuration_space, $(TEST_DIR)/test_configuration_space.cpp))
-$(eval $(call build_test, $(TEST_TGT_DIR)/test_utilities, $(TEST_DIR)/test_utilities.cpp))
+$(eval $(call build_test, test_configuration_space, $(TEST_DIR)/test_configuration_space.cpp))
+$(eval $(call build_test, test_utilities, $(TEST_DIR)/test_utilities.cpp))
 
 .PHONY: clean
 clean:
