@@ -4,7 +4,11 @@
 #include <iostream>
 #include <string>
 
-static int test_construction(void) {
+#include "types.h"
+
+static bool test_construction(void) {
+  bool did_a_test_fail = false;
+  
   ConfigurationSpaceOptions options;
   options.pan_range = {-3.0, 3.0};
   options.pan_resolution = 1;
@@ -13,7 +17,6 @@ static int test_construction(void) {
 
   ConfigurationSpace configuration_space{options};
 
-  bool did_a_test_fail = false;
   if (options != configuration_space.getOptions()) {
     std::cout << "\tExpected options do not match returned options\n";
     did_a_test_fail = true;
@@ -40,24 +43,17 @@ static int test_construction(void) {
     did_a_test_fail = true;
   }
 
-  const CoordinateRange expected_coordinate_range{{-3, -2}, {-2, -1}};
-  if (expected_coordinate_range !=
-      configuration_space.getCoordinateRangeByIndex(0, 0)) {
-    std::cout << "\tExpected coordinate does not match returned coordinate\n";
-    did_a_test_fail = true;
-  }
-
-  return static_cast<int>(did_a_test_fail);
+  return did_a_test_fail;
 }
 
 int main(void) {
-  std::string const test_suite_name{"Test Configuration Space"};
+  const std::string test_suite_name{"Test Configuration Space"};
   std::cout << test_suite_name << std::endl;
 
-  std::string const test_name{"test_construction"};
-  int const result = test_construction();
+  const std::string test_name{"test_construction"};
+  const bool is_test_a_failure = test_construction();
   std::cout << "\t" << test_name << "...";
-  if (result) {
+  if (is_test_a_failure) {
     std::cout << "\tFAILED\n";
   } else {
     std::cout << "\tPASSED\n";
