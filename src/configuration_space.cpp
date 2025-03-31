@@ -1,10 +1,23 @@
 #include "configuration_space.h"
 
 #include <cstddef>
+#include <optional>
 #include <stdexcept>
 #include <tuple>
 
 #include "types.h"
+#include "utilities.h"
+
+#include <iostream>
+
+bool operator==(const ConfigurationRange &lhs, const ConfigurationRange &rhs) {
+  return (std::make_tuple(lhs.pan, lhs.tilt) ==
+          std::make_tuple(rhs.pan, rhs.tilt));
+}
+
+bool operator!=(const ConfigurationRange &lhs, const ConfigurationRange &rhs) {
+  return !(lhs == rhs);
+}
 
 bool operator==(const ConfigurationSpaceOptions &lhs,
                 const ConfigurationSpaceOptions &rhs) {
@@ -47,9 +60,9 @@ ConfigurationSpace::ConfigurationSpace(const ConfigurationSpaceOptions &options)
 
   pan_configs_.reserve(pan_configuration_count_);
   for (size_t i = 0; i < pan_configuration_count_; ++i) {
-    pan_configs_[i] = {options.pan_range.first + options.pan_resolution * i,
-                       options.pan_range.first +
-                           options.pan_resolution * (i + 1)};
+    pan_configs_.emplace_back(
+        Range{options.pan_range.first + options.pan_resolution * i,
+         options.pan_range.first + options.pan_resolution * (i + 1)});
   }
 
   tilt_configuration_count_ = static_cast<size_t>(
@@ -58,10 +71,40 @@ ConfigurationSpace::ConfigurationSpace(const ConfigurationSpaceOptions &options)
 
   tilt_configs_.reserve(tilt_configuration_count_);
   for (size_t i = 0; i < tilt_configuration_count_; ++i) {
-    pan_configs_[i] = {options.tilt_range.first + options.tilt_resolution * i,
-                       options.tilt_range.first +
-                           options.tilt_resolution * (i + 1)};
+    tilt_configs_.emplace_back(
+        Range{options.tilt_range.first + options.tilt_resolution * i,
+         options.tilt_range.first + options.tilt_resolution * (i + 1)});
   }
+}
+
+const std::optional<ConfigurationRange>
+ConfigurationSpace::getConfigurationRange(
+    const ConfigurationState &state) const {
+
+  std::optional<Range> pan_range;
+  for (const Range &range : pan_configs_) {
+    if (isInRange(state.pan, range)) {
+      pan_range = range;
+    }
+  }
+
+  if (!pan_range.has_value()) {
+    return std::nullopt;
+  }
+
+  std::optional<Range> tilt_range;
+  for (const Range &range : tilt_configs_) {
+    if (isInRange(state.tilt, range)) {
+      tilt_range = range;
+    }
+  }
+
+  if (!tilt_range.has_value()) {
+    return std::nullopt;
+  }
+
+  return ConfigurationRange{.pan = pan_range.value(),
+                            .tilt = tilt_range.value()};
 }
 
 ConfigurationSpaceOptions ConfigurationSpace::getOptions(void) const {

@@ -14,7 +14,7 @@ OBJS := $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)	# make object files for all cp
 
 CXX ?= $(CROSS_COMPILE)g++
 LDFLAGS ?=
-CXXFLAGS ?= -g -Wall -Werror -O0 -I$(INC_DIR)
+CXXFLAGS ?= -g -std=c++17 -Wall -Werror -O0 -I$(INC_DIR)
 
 define build_test
 $(eval test_name := $1)
