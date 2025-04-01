@@ -3,8 +3,13 @@
 
 #include <utility>
 
-using Coordinate = std::pair<double, double>;
-using Range = std::pair<double, double>;
-using CoordinateRange = std::pair<Coordinate, Coordinate>;
+template <typename Scalar>
+using Coordinate = std::pair<Scalar, Scalar>;
+
+template <typename Scalar>
+using Range = std::pair<Scalar, Scalar>;
+
+template <typename Scalar>
+using CoordinateRange = std::pair<Coordinate<Scalar>, Coordinate<Scalar>>;
 
 #endif  // TYPES_H

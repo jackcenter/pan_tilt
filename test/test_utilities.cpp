@@ -5,11 +5,11 @@
 
 #include "types.h"
 
-static bool test_isInRange(void) {
+static bool test_isInRangeDouble(void) {
   bool did_a_test_fail = false;
 
   {
-    const Range range{-1.0, 2.0};
+    const Range<double> range{-1.0, 2.0};
     const double value{-2.0};
     const bool expected_result = false;
     const bool result = isInRange(value, range);
@@ -22,7 +22,7 @@ static bool test_isInRange(void) {
   }
 
   {
-    const Range range{-1.0, 2.0};
+    const Range<double> range{-1.0, 2.0};
     const double value{-1.0};
     const bool expected_result = true;
     const bool result = isInRange(value, range);
@@ -35,7 +35,7 @@ static bool test_isInRange(void) {
   }
 
   {
-    const Range range{-1.0, 2.0};
+    const Range<double> range{-1.0, 2.0};
     const double value{0.0};
     const bool expected_result = true;
     const bool result = isInRange(value, range);
@@ -48,7 +48,7 @@ static bool test_isInRange(void) {
   }
 
   {
-    const Range range{-1.0, 2.0};
+    const Range<double> range{-1.0, 2.0};
     const double value{1.0};
     const bool expected_result = true;
     const bool result = isInRange(value, range);
@@ -61,7 +61,7 @@ static bool test_isInRange(void) {
   }
 
   {
-    const Range range{-1.0, 2.0};
+    const Range<double> range{-1.0, 2.0};
     const double value{2.0};
     const bool expected_result = false;
     const bool result = isInRange(value, range);
@@ -74,7 +74,7 @@ static bool test_isInRange(void) {
   }
 
   {
-    const Range range{-1.0, 2.0};
+    const Range<double> range{-1.0, 2.0};
     const double value{3.0};
     const bool expected_result = false;
     const bool result = isInRange(value, range);
@@ -93,14 +93,25 @@ int main(void) {
   const std::string test_suite_name{"Test Utilities"};
   std::cout << test_suite_name << std::endl;
 
-  const std::string test_name{"test_isInRange"};
-  const bool is_test_a_failure = test_isInRange();
+  bool did_a_test_fail = false;
 
-  std::cout << "\t" << test_name << "...";
-  if (is_test_a_failure) {
-    std::cout << "\tFAILED" << std::endl;
+  {
+    const std::string test_name{"test_isInRange"};
+    const bool is_test_a_failure = test_isInRangeDouble();
+
+    std::cout << "\t" << test_name << "...";
+    if (is_test_a_failure) {
+      std::cout << "\tFAILED" << std::endl;
+      did_a_test_fail = true;
+    } else {
+      std::cout << "\tPASSED" << std::endl;
+    }
+  }
+
+  if (did_a_test_fail) {
+    std::cout << "\n\t" << test_suite_name << ": FAILED\n";
   } else {
-    std::cout << "\tPASSED" << std::endl;
+    std::cout << "\n\t" << test_suite_name << ": PASSED\n";
   }
 
   return 0;

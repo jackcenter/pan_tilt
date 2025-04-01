@@ -61,7 +61,7 @@ ConfigurationSpace::ConfigurationSpace(const ConfigurationSpaceOptions &options)
   pan_configs_.reserve(pan_configuration_count_);
   for (size_t i = 0; i < pan_configuration_count_; ++i) {
     pan_configs_.emplace_back(
-        Range{options.pan_range.first + options.pan_resolution * i,
+        Range<double>{options.pan_range.first + options.pan_resolution * i,
          options.pan_range.first + options.pan_resolution * (i + 1)});
   }
 
@@ -72,7 +72,7 @@ ConfigurationSpace::ConfigurationSpace(const ConfigurationSpaceOptions &options)
   tilt_configs_.reserve(tilt_configuration_count_);
   for (size_t i = 0; i < tilt_configuration_count_; ++i) {
     tilt_configs_.emplace_back(
-        Range{options.tilt_range.first + options.tilt_resolution * i,
+        Range<double>{options.tilt_range.first + options.tilt_resolution * i,
          options.tilt_range.first + options.tilt_resolution * (i + 1)});
   }
 }
@@ -81,8 +81,8 @@ const std::optional<ConfigurationRange>
 ConfigurationSpace::getConfigurationRange(
     const ConfigurationState &state) const {
 
-  std::optional<Range> pan_range;
-  for (const Range &range : pan_configs_) {
+  std::optional<Range<double>> pan_range;
+  for (const Range<double> &range : pan_configs_) {
     if (isInRange(state.pan, range)) {
       pan_range = range;
     }
@@ -92,8 +92,8 @@ ConfigurationSpace::getConfigurationRange(
     return std::nullopt;
   }
 
-  std::optional<Range> tilt_range;
-  for (const Range &range : tilt_configs_) {
+  std::optional<Range<double>> tilt_range;
+  for (const Range<double> &range : tilt_configs_) {
     if (isInRange(state.tilt, range)) {
       tilt_range = range;
     }

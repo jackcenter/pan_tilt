@@ -14,17 +14,17 @@ struct ConfigurationState {
 };
 
 struct ConfigurationRange {
-  Range pan;
-  Range tilt;
+  Range<double> pan;
+  Range<double> tilt;
 };
 
 bool operator==(const ConfigurationRange &lhs, const ConfigurationRange &rhs);
 bool operator!=(const ConfigurationRange &lhs, const ConfigurationRange &rhs);
 
 struct ConfigurationSpaceOptions {
-  Range pan_range;
+  Range<double> pan_range;
   double pan_resolution;
-  Range tilt_range;
+  Range<double> tilt_range;
   double tilt_resolution;
 };
 
@@ -50,10 +50,10 @@ private:
   ConfigurationSpaceOptions options_;
 
   size_t pan_configuration_count_;
-  std::vector<Range> pan_configs_;
+  std::vector<Range<double>> pan_configs_;
 
   size_t tilt_configuration_count_;
-  std::vector<Range> tilt_configs_;
+  std::vector<Range<double>> tilt_configs_;
 };
 
 #endif // CONFIGURATION_SPACE_H

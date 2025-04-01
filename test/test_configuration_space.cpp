@@ -83,14 +83,17 @@ int main(void) {
   const std::string test_suite_name{"Test Configuration Space"};
   std::cout << test_suite_name << std::endl;
 
+  bool did_a_test_fail = false;
+
   {
     const std::string test_name{"test_construction"};
     const bool is_test_a_failure = test_construction();
     std::cout << "\t" << test_name << "...";
     if (is_test_a_failure) {
-      std::cout << "\tFAILED\n";
+      std::cout << "\t\tFAILED\n";
+      did_a_test_fail = true;
     } else {
-      std::cout << "\tPASSED\n";
+      std::cout << "\t\tPASSED\n";
     }
   }
 
@@ -100,9 +103,16 @@ int main(void) {
     std::cout << "\t" << test_name << "...";
     if (is_test_a_failure) {
       std::cout << "\tFAILED\n";
+      did_a_test_fail = true;
     } else {
       std::cout << "\tPASSED\n";
     }
+  }
+
+  if (did_a_test_fail) {
+    std::cout << "\n\t" << test_suite_name << ": FAILED\n";
+  } else {
+    std::cout << "\n\t" << test_suite_name << ": PASSED\n";
   }
 
   return 0;

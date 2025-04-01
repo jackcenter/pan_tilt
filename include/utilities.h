@@ -3,5 +3,17 @@
 
 #include "types.h"
 
-bool isInRange(const double &value, const Range &range);
+template <typename Scalar>
+bool isInRange(const Scalar &value, const Range<Scalar> &range) {
+  if (value < range.first) {
+    return false;
+  }
+
+  if (value >= range.second) {
+    return false;
+  }
+
+  return true;
+}
+
 #endif  // UTILITIES_H
