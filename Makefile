@@ -49,10 +49,12 @@ $(BUILD_DIR)/main.o: $(SRC_DIR)/main.cpp
 
 # List tests here
 test: \
+	$(TEST_TGT_DIR)/test_breadth_first_search \
 	$(TEST_TGT_DIR)/test_configuration_space \
 	$(TEST_TGT_DIR)/test_utilities
 
 # Build tests here
+$(eval $(call build_test, test_breadth_first_search, $(TEST_DIR)/test_breadth_first_search.cpp))
 $(eval $(call build_test, test_configuration_space, $(TEST_DIR)/test_configuration_space.cpp))
 $(eval $(call build_test, test_utilities, $(TEST_DIR)/test_utilities.cpp))
 
